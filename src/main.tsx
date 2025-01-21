@@ -5,6 +5,7 @@ import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
 import { useGeographic } from "ol/proj";
 import { Layer } from "ol/layer";
+import "./application.css";
 
 useGeographic();
 
@@ -19,10 +20,22 @@ function Application() {
   useEffect(() => map.setTarget(mapRef.current!), []);
   useEffect(() => map.setLayers(layers), [layers]);
 
+  function handleClick() {
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: { latitude, longitude } }) => {
+        view.animate({
+          center: [longitude, latitude],
+          zoom: 15,
+          duration: 500,
+        });
+      },
+    );
+  }
+
   return (
     <>
       <nav>
-        <button>Center on me</button>
+        <button onClick={handleClick}>Center on me</button>
       </nav>
       <main>
         <div ref={mapRef}></div>
